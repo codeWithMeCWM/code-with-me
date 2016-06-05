@@ -4,6 +4,7 @@ import com.brunotoffolo.codewithme.exceptions.model.Account;
 import com.brunotoffolo.codewithme.exceptions.model.CreditCard;
 import com.brunotoffolo.codewithme.exceptions.model.Customer;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -47,21 +48,29 @@ public class ExceptionHandlingScenario {
         List<CreditCard> creditCards = account.getCreditCards();
         int numberOfCreditCards = creditCards.size();
 
-        // Ops! What happened here?
+        // Let's check if there is any card available. If the account does not provide
+        // one by default, let's order it!
+        CreditCard creditCard;
+        if (numberOfCreditCards == 0) {
+            creditCard = createCreditCard("Visa");
+            account.addCreditCard(creditCard);
+        } else {
+            creditCard = creditCards.get(0);
+        }
+
+        // In this commit we have enhanced our logic by initializing the list variable
+        // with an empty list in the Account class. However, we used the standard empty
+        // list from the Collections library to achieve this result. It will make our
+        // code read the size of the list without any further issues.
         //
-        // We got a NullPointerException because the credit cards list was not correctly
-        // initialized in the Account class. This is an exception thrown by the JVM to tell
-        // the programmer that he/she tried to dereference a variable that was not yet
-        // assigned to a valid memory block (i.e. null).
+        // However, when we try to add a new credit card to the list, note that we face
+        // an UnsupportedOperationException. That is due to the fact that Collections's
+        // emptyList object is an immutable list, that does not allow new objects to be
+        // inserted.
         //
-        // To prevent such exception from happening in our code, we need to ensure that this
-        // variable is not null before invoking a method on it. We can explicitly add a check
-        // (using an 'if' statement) or initialize the list in the Account class.
-        //
-        // The latter is clearly a more suitable option, so let's do it on the next commit.
-        // It will also contain some other validations and exceptions being thrown in the
-        // classes constructors and methods, to show how we can handle it in real-world Java
-        // applications.
+        // This introduces a new JVM exception in our execution flow, as we could see.
+        // Let's fix that by manually creating a new list in the constructor of Account
+        // class. Check the next commit to see it implemented.
     }
 
     /**
@@ -78,5 +87,23 @@ public class ExceptionHandlingScenario {
 
         System.out.println(customer);
         System.out.println(account);
+    }
+
+    /**
+     * Creates a credit card from a given brand.
+     *
+     * @param brand Card's brand
+     * @return Credit card object
+     */
+    private static CreditCard createCreditCard(String brand) {
+        // Creates a random six-digit PIN code and 16-digit credit card number
+        int pin = (int) (100000 + 900000 * Math.random());
+        long number = 1000000000000000L + (long) (random.nextDouble() * 9000000000000000L);
+        GregorianCalendar expirationDate = new GregorianCalendar(2025, 10, 01);
+
+        CreditCard card = new CreditCard(pin, expirationDate, 5000, brand, number);
+        System.out.println("Credit card number " + number + " created with a USD 5000.00 limit");
+
+        return card;
     }
 }

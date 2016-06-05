@@ -1,6 +1,7 @@
 package com.brunotoffolo.codewithme.exceptions.model;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -32,9 +33,11 @@ public class Account {
         this.creationDate = new GregorianCalendar();
         this.creditLimit = 2000.00;
 
-        // Note that the credit cards list is not initialized here. It was on purpose
-        // to demonstrate which impacts it may have during the application execution.
-        // It will be fixed along the next commits.
+        // Now we have initialized the credit cards list with an empty list from the
+        // Collections library. This returns a list with no elements, but does not
+        // yet solve all of our problems. Check the ExceptionHandlingScenario class
+        // to read more about it.
+        this.creditCards = Collections.emptyList();
     }
 
     /**
@@ -84,12 +87,13 @@ public class Account {
      */
     public boolean addCreditCard(CreditCard card) {
 
-        // Here we will face a NullPointerException when we try to add a new credit card.
-        // As we didn't initialize the list in the constructor, the variable still points
-        // to a null object, what will raise an exception when we try to invoke the add()
-        // method on it.
-        // In the next commit, we will initialize the list with a special empty list. The
-        // null pointer error will be gone, but new problems may arise...
+        // The NullPointerException is gone as the list is already initialized with the
+        // Collections.emptyList() call in the constructor on line 40. However, there is
+        // still a problem with that! As it is immutable, we can not add any new objects
+        // to this list -- otherwise, an UnsupportedOperationException is thrown.
+        // In the next commit, we will initialize the list with a new list that will be
+        // manually created. This will solve the problem for good and allow us to insert
+        // a new credit card in the list, as desired.
 
         return creditCards.add(card);
     }
