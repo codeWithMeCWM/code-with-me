@@ -59,19 +59,20 @@ public class ExceptionHandlingScenario {
         }
 
         // John's new credit card has arrived! Let's set a new PIN so he can start using it.
-        creditCard.setPin(1000 + random.nextInt(9000));
+        try {
+            creditCard.setPin(1000 + random.nextInt(9000));
+        } catch (IllegalArgumentException e) {
+            creditCard.setPin(100000 + random.nextInt(900000));
+        }
 
-        // As we manually instantiated a new list in the Account class constructor, we are
-        // now able to add new credit cards whenever we want and without receiving any
-        // exception. The ArrayList class supports the add() method as expected.
+        // We have presented above the classic and simplest approach to handling exceptions
+        // in Java: using a try/catch block. Any operation that may throw an exception should
+        // be placed in the 'try' block, while the operations that should be performed in case
+        // the exception happens should be placed in the 'catch' block.
 
-        // But wait... we were able to set a four-digit PIN, but his previous PIN code
-        // had six digits! There is something wrong here... We should only be able to set
-        // new PIN codes that are six-digit long. Let's fix that in the next commit.
-
-        // We have seen that we can receive exceptions thrown by the JVM, but it is also
-        // possible for the developers to throw any desired exceptions in their code if
-        // something is not right. This will be done in our PIN code length validation.
+        // In the next commit, we will create our own custom exception, to indicate that the
+        // customer does not have enough funds to perform a specific operation. Check the next
+        // commit to discover how we can do it.
     }
 
     /**

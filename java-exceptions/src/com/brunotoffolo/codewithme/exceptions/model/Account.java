@@ -29,10 +29,6 @@ public class Account {
         this.customer = customer;
         this.creationDate = new GregorianCalendar();
         this.creditLimit = 2000.00;
-
-        // By manually creating a list to hold the credit cards, we can ensure that
-        // it will not be null when we need it and that no exception will be thrown
-        // when we try to update it.
         this.creditCards = new ArrayList<>();
     }
 
@@ -40,39 +36,40 @@ public class Account {
      * Deposits a given amount in the account.
      *
      * @param value Value to be deposited.
-     * @return true if deposit was successful; false otherwise
+     * @return Updated balance after deposit was performed
      */
-    public boolean deposit(double value) {
-        // Note that we just check if the value is positive, but do not provide any message
-        // to the client application to give some context if the deposit is not concluded.
-        // We will be able to do it using exceptions -- the next commits will contain some
-        // detail on that.
-        if (value > 0) {
-            balance += value;
-            System.out.println("Account " + number + " | Deposited value: USD " + value + " | New balance: USD " + balance);
-            return true;
+    public double deposit(double value) {
+        // Validation was enhanced to throw an error if the deposited value is smaller
+        // than zero -- that would mean a withdrawal, not a deposit!
+        if (value < 0) {
+            throw new IllegalArgumentException("Deposited value should be higher than zero");
         }
 
-        return false;
+        balance += value;
+        System.out.println("Account " + number + " | Deposited value: USD " + value + " | New balance: USD " + balance);
+        return balance;
     }
 
     /**
      * Withdraws a given amount from the account.
      *
      * @param value Value to be withdrawn.
-     * @return true if withdrawal was successful; false otherwise
+     * @return Updated balance after withdrawal was performed
      */
-    public boolean withdraw(double value) {
-        // Here we also make the check but don't provide any additional detail for the
-        // error cases. It will be fixed soon.
-        if ( (value > 0) && (value < (balance + creditLimit)) ){
-            balance -= value;
-            System.out.println("Account " + number + " | Withdrawn value: USD " + value +
-                    " | Remaining balance: USD " + balance);
-            return true;
+    public double withdraw(double value) {
+        // Validation was also checked. If the value is negative, it would be a deposit,
+        // not a withdrawal!
+        if (value < 0) {
+            throw new IllegalArgumentException("Withdrawal value should be higher than zero");
+        }
+        if (value > (balance + creditLimit)) {
+            throw new IllegalArgumentException("Desired amount is higher than available amount");
         }
 
-        return false;
+        balance -= value;
+        System.out.println("Account " + number + " | Withdrawn value: USD " + value +
+                " | Remaining balance: USD " + balance);
+        return balance;
     }
 
     /**
@@ -129,6 +126,10 @@ public class Account {
      * @param creditLimit Limit to be set
      */
     public void setCreditLimit(double creditLimit) {
+        if (creditLimit < 0) {
+            throw new IllegalArgumentException("Account credit limit should be a positive value");
+        }
+
         this.creditLimit = creditLimit;
     }
 

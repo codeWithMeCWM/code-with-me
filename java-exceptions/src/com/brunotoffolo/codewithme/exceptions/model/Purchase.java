@@ -18,6 +18,11 @@ public class Purchase {
     private String description;
 
     public Purchase(double amount, String description) {
+        // Check if purchase amount is valid
+        if (amount < 0) {
+            throw new IllegalArgumentException("Purchase amount should be higher than zero");
+        }
+
         this.amount = amount;
         this.date = new GregorianCalendar();
         this.setDescription(description);

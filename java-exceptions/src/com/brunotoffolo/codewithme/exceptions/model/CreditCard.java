@@ -2,6 +2,7 @@ package com.brunotoffolo.codewithme.exceptions.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -22,6 +23,11 @@ public class CreditCard {
     private List<Purchase> purchases;
 
     public CreditCard(int pin, Calendar expirationDate, double limit, String brand, long number) {
+        // Enhanced constructor adding a check to the expiration date
+        if (expirationDate.before(new GregorianCalendar())) {
+            throw new IllegalArgumentException("Credit card expiration date should not be in the past");
+        }
+
         this.balance = 0.0;
         this.brand = brand;
         this.expirationDate = expirationDate;
@@ -55,6 +61,10 @@ public class CreditCard {
      * @param limit Limit to be set
      */
     public void setLimit(double limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Credit card limit should be a positive value");
+        }
+
         this.limit = limit;
     }
 
@@ -82,6 +92,11 @@ public class CreditCard {
      * @param pin Code to be set
      */
     public void setPin(int pin) {
+        // Check if the PIN is six-digit long and throw an exception otherwise
+        if (pin < 100000 || pin > 999999) {
+            throw new IllegalArgumentException("PIN code must have exactly six digits");
+        }
+
         this.pin = pin;
     }
 
@@ -108,30 +123,31 @@ public class CreditCard {
      *
      * @param amount Amount of the purchase.
      * @param description Description of the purchase.
-     * @return true if purchase was correctly processed; false otherwise
+     * @returns Partial balance including the added purchase
      */
-    public boolean addPurchase(double amount, String description) {
+    public double addPurchase(double amount, String description) {
 
-        // Note that we check if the card's limit is still suitable to accomodate the new
-        // purchase and inform the user if the purchase could be completed or not, but there
-        // is not any additional information provided in the case where it is not possible
-        // complete the purchase.
-        //
-        // This could be better handled with an exception to provide some context and an error
-        // message. We will do that soon.
+        // We have also enhanced this method to throw an exception if the purchase amount exceeds
+        // the currently available limit for the credit card. This will allow the application to
+        // get a more appropriate context of what went wrong, and can help the developer to debug
+        // the problem by providing a suitable message explaining what went wrong.
+        // If the amount is suitable, it adds the purchase as expected. As we are now throwing an
+        // exception for the fail scenario, we can return the updated balance after we add the new
+        // purchase to the invoice.
 
-        if (balance + amount < limit) {
-            balance += amount;
-
-            Purchase purchase = new Purchase(amount, description);
-            purchases.add(purchase);
-
-            System.out.println("CC " + number + " | New purchase: USD " + amount +
-                    " | Current balance: USD " + balance);
-            return true;
+        if (balance + amount > limit) {
+            throw new IllegalArgumentException("Purchase amount is higher than the available limit");
         }
 
-        return false;
+        balance += amount;
+
+        Purchase purchase = new Purchase(amount, description);
+        purchases.add(purchase);
+
+        System.out.println("CC " + number + " | New purchase: USD " + amount +
+                " | Current balance: USD " + balance);
+
+        return balance;
     }
 
 }

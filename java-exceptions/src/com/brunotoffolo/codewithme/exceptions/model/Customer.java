@@ -38,6 +38,13 @@ public class Customer {
      * @param account Account to be set
      */
     public void setAccount(Account account) {
+        // The customer should be created prior to its account. Otherwise, it
+        // should be an error.
+        Calendar today = new GregorianCalendar();
+        if ( today.after(account.getCreationDate()) ) {
+            throw new IllegalArgumentException("Customer should be created prior to account");
+        }
+
         this.account = account;
     }
 
