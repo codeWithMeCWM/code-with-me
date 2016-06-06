@@ -58,19 +58,20 @@ public class ExceptionHandlingScenario {
             creditCard = creditCards.get(0);
         }
 
-        // In this commit we have enhanced our logic by initializing the list variable
-        // with an empty list in the Account class. However, we used the standard empty
-        // list from the Collections library to achieve this result. It will make our
-        // code read the size of the list without any further issues.
-        //
-        // However, when we try to add a new credit card to the list, note that we face
-        // an UnsupportedOperationException. That is due to the fact that Collections's
-        // emptyList object is an immutable list, that does not allow new objects to be
-        // inserted.
-        //
-        // This introduces a new JVM exception in our execution flow, as we could see.
-        // Let's fix that by manually creating a new list in the constructor of Account
-        // class. Check the next commit to see it implemented.
+        // John's new credit card has arrived! Let's set a new PIN so he can start using it.
+        creditCard.setPin(1000 + random.nextInt(9000));
+
+        // As we manually instantiated a new list in the Account class constructor, we are
+        // now able to add new credit cards whenever we want and without receiving any
+        // exception. The ArrayList class supports the add() method as expected.
+
+        // But wait... we were able to set a four-digit PIN, but his previous PIN code
+        // had six digits! There is something wrong here... We should only be able to set
+        // new PIN codes that are six-digit long. Let's fix that in the next commit.
+
+        // We have seen that we can receive exceptions thrown by the JVM, but it is also
+        // possible for the developers to throw any desired exceptions in their code if
+        // something is not right. This will be done in our PIN code length validation.
     }
 
     /**

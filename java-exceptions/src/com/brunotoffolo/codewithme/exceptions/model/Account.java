@@ -1,9 +1,6 @@
 package com.brunotoffolo.codewithme.exceptions.model;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Basic and generic bank account to serve as an example for the banking scenario.
@@ -33,11 +30,10 @@ public class Account {
         this.creationDate = new GregorianCalendar();
         this.creditLimit = 2000.00;
 
-        // Now we have initialized the credit cards list with an empty list from the
-        // Collections library. This returns a list with no elements, but does not
-        // yet solve all of our problems. Check the ExceptionHandlingScenario class
-        // to read more about it.
-        this.creditCards = Collections.emptyList();
+        // By manually creating a list to hold the credit cards, we can ensure that
+        // it will not be null when we need it and that no exception will be thrown
+        // when we try to update it.
+        this.creditCards = new ArrayList<>();
     }
 
     /**
@@ -86,15 +82,8 @@ public class Account {
      * @return true if addition was successful; false otherwise
      */
     public boolean addCreditCard(CreditCard card) {
-
-        // The NullPointerException is gone as the list is already initialized with the
-        // Collections.emptyList() call in the constructor on line 40. However, there is
-        // still a problem with that! As it is immutable, we can not add any new objects
-        // to this list -- otherwise, an UnsupportedOperationException is thrown.
-        // In the next commit, we will initialize the list with a new list that will be
-        // manually created. This will solve the problem for good and allow us to insert
-        // a new credit card in the list, as desired.
-
+        // As we have manually created a new list in the constructor, this
+        // method will run without throwing an exception anymore.
         return creditCards.add(card);
     }
 
