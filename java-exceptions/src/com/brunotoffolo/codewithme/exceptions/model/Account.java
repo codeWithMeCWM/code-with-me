@@ -1,5 +1,7 @@
 package com.brunotoffolo.codewithme.exceptions.model;
 
+import com.brunotoffolo.codewithme.exceptions.exception.InsufficientFundsException;
+
 import java.util.*;
 
 /**
@@ -21,9 +23,13 @@ public class Account {
     private final Customer customer;
     private List<CreditCard> creditCards;
 
+    /**
+     * Basic constructor used to initialize the account and provide an initial
+     * credit limit for the customer.
+     * @param number Account number
+     * @param customer Customer the account belongs to
+     */
     public Account(int number, Customer customer) {
-        // This is a basic constructor used to initialize the fields and assign an
-        // initial credit limit for the customer.
         this.number = number;
         this.balance = 0.0;
         this.customer = customer;
@@ -39,8 +45,6 @@ public class Account {
      * @return Updated balance after deposit was performed
      */
     public double deposit(double value) {
-        // Validation was enhanced to throw an error if the deposited value is smaller
-        // than zero -- that would mean a withdrawal, not a deposit!
         if (value < 0) {
             throw new IllegalArgumentException("Deposited value should be higher than zero");
         }
@@ -57,13 +61,15 @@ public class Account {
      * @return Updated balance after withdrawal was performed
      */
     public double withdraw(double value) {
-        // Validation was also checked. If the value is negative, it would be a deposit,
-        // not a withdrawal!
         if (value < 0) {
             throw new IllegalArgumentException("Withdrawal value should be higher than zero");
         }
+
+        // Now that we have our own custom exception, we can adjust the checks here and throw a
+        // more appropriate exception in case the customer does not have enough money on his/her
+        // account to perform the withdrawal.
         if (value > (balance + creditLimit)) {
-            throw new IllegalArgumentException("Desired amount is higher than available amount");
+            throw new InsufficientFundsException("Desired amount is higher than available amount");
         }
 
         balance -= value;
@@ -79,8 +85,6 @@ public class Account {
      * @return true if addition was successful; false otherwise
      */
     public boolean addCreditCard(CreditCard card) {
-        // As we have manually created a new list in the constructor, this
-        // method will run without throwing an exception anymore.
         return creditCards.add(card);
     }
 

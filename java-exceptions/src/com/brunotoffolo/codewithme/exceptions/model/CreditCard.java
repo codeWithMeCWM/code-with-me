@@ -1,5 +1,7 @@
 package com.brunotoffolo.codewithme.exceptions.model;
 
+import com.brunotoffolo.codewithme.exceptions.exception.InsufficientFundsException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -23,7 +25,6 @@ public class CreditCard {
     private List<Purchase> purchases;
 
     public CreditCard(int pin, Calendar expirationDate, double limit, String brand, long number) {
-        // Enhanced constructor adding a check to the expiration date
         if (expirationDate.before(new GregorianCalendar())) {
             throw new IllegalArgumentException("Credit card expiration date should not be in the past");
         }
@@ -92,7 +93,6 @@ public class CreditCard {
      * @param pin Code to be set
      */
     public void setPin(int pin) {
-        // Check if the PIN is six-digit long and throw an exception otherwise
         if (pin < 100000 || pin > 999999) {
             throw new IllegalArgumentException("PIN code must have exactly six digits");
         }
@@ -127,16 +127,14 @@ public class CreditCard {
      */
     public double addPurchase(double amount, String description) {
 
-        // We have also enhanced this method to throw an exception if the purchase amount exceeds
-        // the currently available limit for the credit card. This will allow the application to
-        // get a more appropriate context of what went wrong, and can help the developer to debug
-        // the problem by providing a suitable message explaining what went wrong.
-        // If the amount is suitable, it adds the purchase as expected. As we are now throwing an
-        // exception for the fail scenario, we can return the updated balance after we add the new
-        // purchase to the invoice.
+        // Now that this method does already throw an exception if the the purchase amount exceeds
+        // the currently available limit for the credit card, we can change it from an "illegal
+        // argument" to an "insufficient funds" type. This will provide an even better context for
+        // the application developer to debug the code and find out what the problem is when a
+        // purchase can not be completed.
 
         if (balance + amount > limit) {
-            throw new IllegalArgumentException("Purchase amount is higher than the available limit");
+            throw new InsufficientFundsException("Purchase amount is higher than the available limit");
         }
 
         balance += amount;
