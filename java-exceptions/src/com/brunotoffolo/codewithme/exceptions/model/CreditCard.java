@@ -2,6 +2,11 @@ package com.brunotoffolo.codewithme.exceptions.model;
 
 import com.brunotoffolo.codewithme.exceptions.exception.InsufficientFundsException;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -126,13 +131,6 @@ public class CreditCard {
      * @returns Partial balance including the added purchase
      */
     public double addPurchase(double amount, String description) throws InsufficientFundsException {
-
-        // Similarly to the change added to the withdraw() method of Account class, we now need to
-        // add the 'throws InsufficientFundsException' information to this method signature to
-        // inform any possible caller that this method can throw an exception. It is now responsibility
-        // of the caller to handle this potential exception, either by wrapping the call in a try/catch
-        // block or by adding a 'throws' information at the end of its signature.
-
         if (balance + amount > limit) {
             throw new InsufficientFundsException("Purchase amount is higher than the available limit");
         }
@@ -146,6 +144,86 @@ public class CreditCard {
                 " | Current balance: USD " + balance);
 
         return balance;
+    }
+
+    /**
+     * Generates a simple invoice file for the credit card and saves it into a file. The
+     * invoice is a plain text file containing information of the card, the purchases and
+     * total balance at the present time.
+     *
+     * @param filename Name of the file in which the invoice should be stored.
+     */
+    public void createInvoice(String filename) {
+
+        // In this method, we are going to create a new file containing the invoice. To
+        // create a simple text file in a Java program, we need to instantiate a new
+        // BufferedWriter that will be used to write the information we want into a file.
+        // This BufferedWriter takes a FileWriter as a parameter, and the latter needs a
+        // File object to be created.
+
+        // That said, let's create the variables and write the invoice information into
+        // our file. We will also create a SimpleDateFormat object to export the purchase
+        // dates in a specific format.
+
+        File invoiceFile = new File(filename);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy, HH:MM");
+        String currentTime = dateTimeFormat.format(Calendar.getInstance().getTime());
+
+        // As BufferedWriter's write() method may throw an IOException when invoked, we
+        // need to wrap the calls in a try/catch block. Moreover, as this class consumes
+        // system resources, we need to close it as soon as we are done using it.
+
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(invoiceFile));
+            bufferedWriter.write("INVOICE FOR: " + brand + " " + number + "\r\n");
+            bufferedWriter.write("--------------------------------------------\r\n");
+            bufferedWriter.write("PURCHASES\r\n");
+            bufferedWriter.write("Date\t\tAmount\tDescription\r\n");
+            for (Purchase purchase : purchases) {
+                bufferedWriter.write(
+                        dateFormat.format(purchase.getDate().getTime()) + "\t" +
+                        purchase.getAmount() + "\t" +
+                        purchase.getDescription() + "\r\n");
+            }
+            bufferedWriter.write("--------------------------------------------\r\n");
+            bufferedWriter.write("TOTAL AMOUNT: USD " + balance + "\n");
+            bufferedWriter.write("Remaining limit: USD " + (limit - balance) + "\n");
+            bufferedWriter.write("--------------------------------------------\r\n");
+            bufferedWriter.write("Invoice generated at " + currentTime);
+
+            System.out.println("CC " + number + " | Invoice generated in " + filename);
+        } catch (IOException e) {
+            System.err.println("Error while exporting credit card invoice: " + e.getMessage());
+        } finally {
+            // The 'finally' block had not been presented here yet. It may be used after
+            // a try or a catch block and represents operations that need to be performed
+            // independently of the exception having been thrown or not.
+
+            // This block is ensured by the JVM to run after the needed operations in the
+            // try/catch block have been executed. That is a reason why the finally block
+            // is usually reserved for doing clean-up activities such as, in our case,
+            // closing the opened resources (to guarantee that all reserved system resources
+            // will be freed after we finished using them).
+
+            // As the close() method of BufferedWriter may also throw an IOException, we
+            // should wrap it in a try/catch block. As a best practice, the contents in a
+            // finally block should NEVER throw an exception -- because, conceptually, all
+            // operations that could throw an exception have already been performed in the
+            // try block.
+
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                System.err.println("Error while closing invoice BufferedWriter: " + e.getMessage());
+            } catch (NullPointerException e) {
+                // As we had not initialized the BufferedWriter before the try block begins,
+                // it is possible that the variable is still null when we try to invoke the
+                // close() method.
+                System.err.println("Error while closing invoice BufferedWriter: " + e.getMessage());
+            }
+        }
     }
 
 }

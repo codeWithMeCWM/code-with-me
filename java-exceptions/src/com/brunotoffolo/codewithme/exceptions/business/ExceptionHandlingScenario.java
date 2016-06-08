@@ -91,18 +91,47 @@ public class ExceptionHandlingScenario {
             }
         }
 
-        // After changing InsufficientFundsException to a checked exception, the compiler forces
-        // us to handle it in our application logic. We could have done it even for runtime
-        // exceptions, of course, but this handling is only mandatory for checked exceptions.
+        // Now that the groceries and gifts are already bought, John decides to plan a
+        // getaway on the weekend to a resort close to the beach and celebrate the anniversary
+        try {
+            creditCard.addPurchase(1497.00, "Air tickets");
+            creditCard.addPurchase(2399.00, "Hotel reservation");
+            creditCard.addPurchase(359.00, "Sightseeing tour pack");
+        } catch (InsufficientFundsException e) {
 
-        // Feel free to play around with the code and add a try/catch block around the withdraw()
-        // calls in the last commit, when InsufficientFundsException was still a subclass of
-        // java.lang.RuntimeException, and you will see that the code in the catch block will
-        // be invoked during the code execution just like in the code above.
+            // If we are in the catch block, it means that something went wrong and John could
+            // not make one or more of his reservations for the weekend trip. To check what's
+            // wrong, he decides to print his credit card invoices and see his recent purchases.
+            creditCard.createInvoice("invoice_" + creditCard.getNumber() + ".txt");
 
-        // Now that the potential exceptions are handled in the catch blocks (lines 75 and 87),
-        // our code will run as expected and finish successfully. No exception will pop out in
-        // the console as they will be caught before that happens.
+        }
+
+        // In the CreditCard class, we have demonstrated how to use the 'finally' block, that
+        // can be used to perform operations which are ensured to be executed. All finally
+        // blocks run no matter if the exception is thrown or not. In this case, there are two
+        // different execution flows possible in a program that contains a finally block:
+        //
+        // 1)  try -------------------------> finally --> remaining code
+        //           no exception happens
+        //
+        // 2)  try ----------------------> catch ----------------------> finally --> remaining code
+        //           exception happens            exception is handled
+
+        // As the finally block is always executed, it is possible to have block composed of only
+        // a try and a finally blocks. Skipping the catch block is possible if only runtime
+        // exceptions can be thrown by the logic inside the try block, as they do not need any
+        // explicitly handling in the code.
+        // In this case, the two following execution flows would be possible in the program.
+        //
+        // 1)  try -------------------------> finally --> remaining code
+        //           no exception happens
+        //
+        // 2)  try ----------------------> finally ----> exception is thrown upper into the stack
+        //           exception happens
+        //
+        // If an exception happens inside the try of a try/finally block, the code inside finally
+        // is executed and after that the exception is thrown into the stack, going up until a
+        // higher method handles it (or crashing the program if it is not handled anywhere).
     }
 
     /**

@@ -65,10 +65,6 @@ public class Account {
             throw new IllegalArgumentException("Withdrawal value should be higher than zero");
         }
 
-        // As we throw our custom exception inside the if block, and this exception is now a
-        // checked exception, the Java compiler requires us to update the method signature
-        // informing that it can throw it when invoked. Note that 'throws InsufficientFundsException'
-        // has been added to the end of the method signature.
         if (value > (balance + creditLimit)) {
             throw new InsufficientFundsException("Desired amount is higher than available amount");
         }
