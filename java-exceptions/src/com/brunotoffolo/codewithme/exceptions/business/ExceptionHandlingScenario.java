@@ -1,5 +1,6 @@
 package com.brunotoffolo.codewithme.exceptions.business;
 
+import com.brunotoffolo.codewithme.exceptions.exception.InsufficientFundsException;
 import com.brunotoffolo.codewithme.exceptions.model.Account;
 import com.brunotoffolo.codewithme.exceptions.model.CreditCard;
 import com.brunotoffolo.codewithme.exceptions.model.Customer;
@@ -68,21 +69,40 @@ public class ExceptionHandlingScenario {
         // As he does already have a card, he can go to an ATM and get some money for the
         // daily expenses. Let's take enough to pay the rent and buy the groceries, and
         // an additional amount to buy his wife some nice gifts to celebrate the anniversary.
-        account.withdraw(3500.00);
-        account.withdraw(1200.00);
+        try {
+            account.withdraw(3500.00);
+            account.withdraw(1200.00);
+        } catch (InsufficientFundsException e) {
 
-        // When we run this code, an InsufficientFundsException is thrown because John tried
-        // to withdraw USD 1,200.00 when his available amount was of USD 1,000.00. As our
-        // custom exception extends RuntimeException, we do not need to take any safety
-        // measures to get the code compiled and running.
+            // If John's credit limit is not enough to perform the withdrawal, he will make
+            // the payments using his credit card. In this case, let's add the purchases to
+            // his invoice.
 
-        // This may be a drawback of runtime exceptions: they do not need to be explicitly
-        // taken into account when developing an application, what may lead to errors during
-        // its execution, just like we have seen right now.
+            // As adding a purchase can also throw an exception due to insufficient funds, we
+            // also need to wrap it inside a try/catch block. It is possible to nest these
+            // blocks as deep as desired.
+            try {
+                creditCard.addPurchase(699.00, "Gold ring");
+                creditCard.addPurchase(89.50, "Wine bottle");
+            } catch (InsufficientFundsException ex) {
+                // If he does not have enough money for the gifts, the anniversary celebration
+                // is over. Let's just log the error and that's it...
+                System.err.println("Anniversary gifts can not be purchased: " + ex.getMessage());
+            }
+        }
 
-        // Although we could wrap the method calls in lines 71 and 72 in a try/catch block,
-        // we didn't do it and the code ran anyway. This would not happen if we were dealing
-        // with a checked exception, as we will see in the next commit.
+        // After changing InsufficientFundsException to a checked exception, the compiler forces
+        // us to handle it in our application logic. We could have done it even for runtime
+        // exceptions, of course, but this handling is only mandatory for checked exceptions.
+
+        // Feel free to play around with the code and add a try/catch block around the withdraw()
+        // calls in the last commit, when InsufficientFundsException was still a subclass of
+        // java.lang.RuntimeException, and you will see that the code in the catch block will
+        // be invoked during the code execution just like in the code above.
+
+        // Now that the potential exceptions are handled in the catch blocks (lines 75 and 87),
+        // our code will run as expected and finish successfully. No exception will pop out in
+        // the console as they will be caught before that happens.
     }
 
     /**

@@ -125,13 +125,13 @@ public class CreditCard {
      * @param description Description of the purchase.
      * @returns Partial balance including the added purchase
      */
-    public double addPurchase(double amount, String description) {
+    public double addPurchase(double amount, String description) throws InsufficientFundsException {
 
-        // Now that this method does already throw an exception if the the purchase amount exceeds
-        // the currently available limit for the credit card, we can change it from an "illegal
-        // argument" to an "insufficient funds" type. This will provide an even better context for
-        // the application developer to debug the code and find out what the problem is when a
-        // purchase can not be completed.
+        // Similarly to the change added to the withdraw() method of Account class, we now need to
+        // add the 'throws InsufficientFundsException' information to this method signature to
+        // inform any possible caller that this method can throw an exception. It is now responsibility
+        // of the caller to handle this potential exception, either by wrapping the call in a try/catch
+        // block or by adding a 'throws' information at the end of its signature.
 
         if (balance + amount > limit) {
             throw new InsufficientFundsException("Purchase amount is higher than the available limit");

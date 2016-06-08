@@ -1,5 +1,7 @@
 package com.brunotoffolo.codewithme.exceptions.exception;
 
+import java.lang.Exception;
+
 /**
  * Indicates that the customer does not have enough funds in the account to perform
  * a given operation. As this class extends RuntimeException, it will be created as
@@ -7,16 +9,19 @@ package com.brunotoffolo.codewithme.exceptions.exception;
  *
  * @author Bruno Toffolo
  */
-public class InsufficientFundsException extends RuntimeException {
+public class InsufficientFundsException extends Exception {
 
-    // Note that this class is a subclass of java.lang.RuntimeException, which means
-    // that it will also be a runtime exception and, therefore, unchecked. We can
-    // make it a checked exception by changing it into a subclass of the generic
-    // java.lang.Exception, but this has additional implications during coding that
-    // need to be addressed as well.
+    // By changing the super class of this exception from java.lang.RuntimeException
+    // to java.lang.Exception, it becomes a compile time exception (also called a
+    // checked exception).
     //
-    // The next commit will show what are these additional implications for checked
-    // exception types and how to handle them in a Java application.
+    // With this change, the Java compiler (and also the Java IDEs) are aware of this
+    // exception and will require explicit handling in any code invoking a method that
+    // is able to throw it at runtime.
+    //
+    // Browse the code to check what needed to be changed due to this new information.
+    // You can find changes in the Account, CreditCard and ExceptionHandlingScenario
+    // classes of our application.
 
     /**
      * Creates a new exception with the given message.

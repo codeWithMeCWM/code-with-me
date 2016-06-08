@@ -60,14 +60,15 @@ public class Account {
      * @param value Value to be withdrawn.
      * @return Updated balance after withdrawal was performed
      */
-    public double withdraw(double value) {
+    public double withdraw(double value) throws InsufficientFundsException {
         if (value < 0) {
             throw new IllegalArgumentException("Withdrawal value should be higher than zero");
         }
 
-        // Now that we have our own custom exception, we can adjust the checks here and throw a
-        // more appropriate exception in case the customer does not have enough money on his/her
-        // account to perform the withdrawal.
+        // As we throw our custom exception inside the if block, and this exception is now a
+        // checked exception, the Java compiler requires us to update the method signature
+        // informing that it can throw it when invoked. Note that 'throws InsufficientFundsException'
+        // has been added to the end of the method signature.
         if (value > (balance + creditLimit)) {
             throw new InsufficientFundsException("Desired amount is higher than available amount");
         }
