@@ -98,40 +98,28 @@ public class ExceptionHandlingScenario {
             creditCard.addPurchase(2399.00, "Hotel reservation");
             creditCard.addPurchase(359.00, "Sightseeing tour pack");
         } catch (InsufficientFundsException e) {
-
             // If we are in the catch block, it means that something went wrong and John could
             // not make one or more of his reservations for the weekend trip. To check what's
             // wrong, he decides to print his credit card invoices and see his recent purchases.
             creditCard.createInvoice("invoice_" + creditCard.getNumber() + ".txt");
-
         }
 
-        // In the CreditCard class, we have demonstrated how to use the 'finally' block, that
-        // can be used to perform operations which are ensured to be executed. All finally
-        // blocks run no matter if the exception is thrown or not. In this case, there are two
-        // different execution flows possible in a program that contains a finally block:
-        //
-        // 1)  try -------------------------> finally --> remaining code
-        //           no exception happens
-        //
-        // 2)  try ----------------------> catch ----------------------> finally --> remaining code
-        //           exception happens            exception is handled
+        // In the last commit we implemented a new method that generates the invoice for a given
+        // credit card and save that in a file. In the code we were able to demonstrate how to
+        // use the finally block when handling exceptions and also give another real world case
+        // of exception handling.
 
-        // As the finally block is always executed, it is possible to have block composed of only
-        // a try and a finally blocks. Skipping the catch block is possible if only runtime
-        // exceptions can be thrown by the logic inside the try block, as they do not need any
-        // explicitly handling in the code.
-        // In this case, the two following execution flows would be possible in the program.
-        //
-        // 1)  try -------------------------> finally --> remaining code
-        //           no exception happens
-        //
-        // 2)  try ----------------------> finally ----> exception is thrown upper into the stack
-        //           exception happens
-        //
-        // If an exception happens inside the try of a try/finally block, the code inside finally
-        // is executed and after that the exception is thrown into the stack, going up until a
-        // higher method handles it (or crashing the program if it is not handled anywhere).
+        // At this time, we added a small change in the way we handle multiple exceptions. The
+        // main purpose of this commit was to demonstrate how we are able to adopt a single
+        // strategy when handling different exception types. By using a vertical bar, that is
+        // represented by the symbol '|', we are able to catch multiple exceptions in a single
+        // catch block. You can see it in the CreditCard class.
+
+        // The main purpose of this enhancement, that was introduced in Java SE 7, is to reduce
+        // code duplication and avoid catching a broader exception instead of multiple more
+        // specific ones.
+        // More details about this feature can be found in the Java SE 7 Documentation page at
+        // http://docs.oracle.com/javase/7/docs/technotes/guides/language/catch-multiple.html .
     }
 
     /**
