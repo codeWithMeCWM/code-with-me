@@ -104,30 +104,10 @@ public class ExceptionHandlingScenario {
             creditCard.createInvoice("invoice_" + creditCard.getNumber() + ".txt");
         }
 
-        // In the last commit we made a small change that could reduce the size of our method
-        // to generate a credit card invoice. By catching different types of exceptions
-        // in a single catch block, we could make it easier to understand and maintain our
-        // application logic.
-
-        // At this time, we added a bigger change that allows us to handle the system resources
-        // in a considerably easier way. By making use of the 'try-with-resources' statement,
-        // introduced in Java 7, we are able to open the resources we need directly in the try
-        // block declaration and let the JVM handle its closing at the end of our try/catch
-        // block. You can see it in the CreditCard class.
-
-        // Considering this feature, as we only used the finally block of the method to close
-        // the system resource we were using, we can remove it completely and let the platform
-        // do this work for us.
-
-        // The try-with-resources statements is a simpler way of handling system resources. It
-        // ensures every object which implements the java.lang.AutoCloseable interface (which
-        // is the case of every object that implements the java.io.Closeable interface) is
-        // automatically closed by the JVM at the end of the statement.
-        // As this interface defines the close() method, it is automatically called to close the
-        // resource after the statement is executed.
-
-        // More details about this feature can be found in the Java SE 7 Documentation page at
-        // https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html .
+        // As John could notice that he didn't have any more limit left to book the trip, he then
+        // decided to change the date of his air tickets and hotel reservation to the next month,
+        // so he could save some extra money and buy the sightseeing tour pack.
+        // His wife loved the ring and they are very excited to make this trip next month!!!
     }
 
     /**

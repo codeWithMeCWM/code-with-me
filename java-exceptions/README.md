@@ -51,3 +51,33 @@ tutorials on how to do that are available for
 Log messages were inserted in the code, through simple `System.out` messages, to
 make it easier to follow the order in which the commands were invoked by simply
 examining the console output after the application is run.
+
+
+## Step-by-step commit list
+
+As the main purpose of this project is to provide an interactive tutorial of exception
+handling in Java, it was conceived as an incremental version of our initial code. Each
+new commit added to the repo performed a significant change that could show a new best
+practice in exception handling.
+
+The best way to make the most out of this tutorial is to follow from the first commit,
+and check the enhancements progressively. Every commit includes a basic description of
+what has been changed (it is part of the commit message), and by clicking the "Browse
+Files" button in the top right corner of the commit message it is possible to navigate
+in the repository exactly as it was after the commit was performed.
+
+A complete list of the commits in this repository is presented below, in the ascending
+chronological order in which they were pushed. Start from the first item and keep going
+down! :)
+
+1. [Initial commit with the code structure](https://github.com/brunotoffolo/code-with-me/commit/1837c61c6816bc5082e7279db66e1f25c9970513)
+2. [Initialize lists to remove possible NPEs](https://github.com/brunotoffolo/code-with-me/commit/58d92b2a6ce7901dd77176beef0fbfc2998b2e89)
+3. [Manually initialize list to avoid any exception](https://github.com/brunotoffolo/code-with-me/commit/ca374cb6aa8042e3d3dea15eaffd9769ae2cd5bf)
+4. [Enhance checks and throw exceptions in error cases](https://github.com/brunotoffolo/code-with-me/commit/1b3b9303dca8f52cd547b66f79b18553b93b7872)
+5. [Create a customized runtime exception](https://github.com/brunotoffolo/code-with-me/commit/86c843e47a18548a918ac8c259d4ec4db1754fa5)
+6. [Convert InsufficientFundsException to checked](https://github.com/brunotoffolo/code-with-me/commit/bf17e510261c1c658aed11a93965e143024152c0)
+7. [Demonstrate 'finally' block in invoice generation](https://github.com/brunotoffolo/code-with-me/commit/a8f3ce85836ae4bb80856a8f05d4bc1327664f69)
+8. [Catch multiple exception types in a single block](https://github.com/brunotoffolo/code-with-me/commit/a37c1ea3dad0846fd623a8581e9d1759eb19d415)
+9. [Use try-with-resources to write the invoice file](https://github.com/brunotoffolo/code-with-me/commit/94c5ea9128f19d29f640ae0cb041ba921dd8cb70)
+
+Have fun enjoying this tutorial!
