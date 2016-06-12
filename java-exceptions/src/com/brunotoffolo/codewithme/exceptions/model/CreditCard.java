@@ -155,13 +155,29 @@ public class CreditCard {
      */
     public void createInvoice(String filename) {
         File invoiceFile = new File(filename);
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy, HH:MM");
         String currentTime = dateTimeFormat.format(Calendar.getInstance().getTime());
 
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(invoiceFile));
+        // Here we replaced the BufferedWriter initialization (that was performed inside
+        // the try block) and close (that was performed in the finally block) operations
+        // with a single declaration, between brackets, in the try block declaration.
+
+        // This is possible because the BufferedWriter class implements the AutoCloseable
+        // interface (which is extended by the Closeable interface). In this scenario, we
+        // can remove the entire finally block (as it was only used for closing the reader)
+        // and let the JVM do it for us.
+
+        // Note that we did not need to initialize it inside the reader in the try block and
+        // close it in the finally block, which could reduce our code by 8 lines and still
+        // perform the exact same thing.
+
+        // This change demonstrated how to use the try-with-resources strategy implemented
+        // in Java 7. It can be used to simplify the code while still caring about system
+        // resources that may be temporarily consumed by the application.
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(invoiceFile))) {
             bufferedWriter.write("INVOICE FOR: " + brand + " " + number + "\r\n");
             bufferedWriter.write("--------------------------------------------\r\n");
             bufferedWriter.write("PURCHASES\r\n");
@@ -181,25 +197,6 @@ public class CreditCard {
             System.out.println("CC " + number + " | Invoice generated in " + filename);
         } catch (IOException e) {
             System.err.println("Error while exporting credit card invoice: " + e.getMessage());
-        } finally {
-            // In the previous commit, we used two different 'catch' blocks to do exactly the
-            // same thing: log a message informing that an exception happening when closing the
-            // BufferedWriter resource. We implemented two different catch blocks because each
-            // of them would handle a specific type of exception.
-
-            // In such cases where the same handling operations should be performed for more than
-            // one type of exception, Java 7 has implemented a mechanism that makes it easier for
-            // developers to do that. It is now possible to pipe different exception types in a
-            // single block by using the pipe '|' operator when declaring the catch arguments.
-
-            // An example can be seen below. We used a single catch block to handle both the
-            // IOException and the NullPointerException.
-
-            try {
-                bufferedWriter.close();
-            } catch (IOException | NullPointerException e) {
-                System.err.println("Error while closing invoice BufferedWriter: " + e.getMessage());
-            }
         }
     }
 

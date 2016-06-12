@@ -104,22 +104,30 @@ public class ExceptionHandlingScenario {
             creditCard.createInvoice("invoice_" + creditCard.getNumber() + ".txt");
         }
 
-        // In the last commit we implemented a new method that generates the invoice for a given
-        // credit card and save that in a file. In the code we were able to demonstrate how to
-        // use the finally block when handling exceptions and also give another real world case
-        // of exception handling.
+        // In the last commit we made a small change that could reduce the size of our method
+        // to generate a credit card invoice. By catching different types of exceptions
+        // in a single catch block, we could make it easier to understand and maintain our
+        // application logic.
 
-        // At this time, we added a small change in the way we handle multiple exceptions. The
-        // main purpose of this commit was to demonstrate how we are able to adopt a single
-        // strategy when handling different exception types. By using a vertical bar, that is
-        // represented by the symbol '|', we are able to catch multiple exceptions in a single
-        // catch block. You can see it in the CreditCard class.
+        // At this time, we added a bigger change that allows us to handle the system resources
+        // in a considerably easier way. By making use of the 'try-with-resources' statement,
+        // introduced in Java 7, we are able to open the resources we need directly in the try
+        // block declaration and let the JVM handle its closing at the end of our try/catch
+        // block. You can see it in the CreditCard class.
 
-        // The main purpose of this enhancement, that was introduced in Java SE 7, is to reduce
-        // code duplication and avoid catching a broader exception instead of multiple more
-        // specific ones.
+        // Considering this feature, as we only used the finally block of the method to close
+        // the system resource we were using, we can remove it completely and let the platform
+        // do this work for us.
+
+        // The try-with-resources statements is a simpler way of handling system resources. It
+        // ensures every object which implements the java.lang.AutoCloseable interface (which
+        // is the case of every object that implements the java.io.Closeable interface) is
+        // automatically closed by the JVM at the end of the statement.
+        // As this interface defines the close() method, it is automatically called to close the
+        // resource after the statement is executed.
+
         // More details about this feature can be found in the Java SE 7 Documentation page at
-        // http://docs.oracle.com/javase/7/docs/technotes/guides/language/catch-multiple.html .
+        // https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html .
     }
 
     /**
